@@ -94,6 +94,7 @@
                   <span class="eff-col-attr">目标属性</span>
                   <span class="eff-col-type">类型</span>
                   <span class="eff-col-val">数值</span>
+                  <span class="eff-col-lvl">级别</span>
                   <span class="eff-col-act"></span>
                 </div>
                 <div v-for="(eff, eIdx) in res.effects" :key="eff.id" class="eff-table-row">
@@ -108,6 +109,8 @@
                   </el-select>
                   <el-input-number :model-value="eff.value" size="small" controls-position="right" class="eff-col-val"
                     @update:model-value="(v: number | undefined) => sysStore.updateEffect(selectedSystem!.id, rIdx, eIdx, { value: v ?? 0 })" />
+                  <el-input-number :model-value="eff.level" :min="0" size="small" controls-position="right" class="eff-col-lvl"
+                    @update:model-value="(v: number | undefined) => sysStore.updateEffect(selectedSystem!.id, rIdx, eIdx, { level: v ?? 0 })" />
                   <button class="delete-btn-sm" @click="sysStore.removeEffect(selectedSystem!.id, rIdx, eIdx)">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                   </button>
@@ -212,6 +215,7 @@
                     <span class="eff-col-attr">目标属性</span>
                     <span class="eff-col-type">类型</span>
                     <span class="eff-col-val">数值</span>
+                    <span class="eff-col-lvl">级别</span>
                     <span class="eff-col-act"></span>
                   </div>
                   <div v-for="(eff, eIdx) in combo.effects" :key="eff.id" class="eff-table-row">
@@ -226,6 +230,8 @@
                     </el-select>
                     <el-input-number :model-value="eff.value" size="small" controls-position="right" class="eff-col-val"
                       @update:model-value="(v: number | undefined) => sysStore.updateComboEffectItem(selectedSystem!.id, cIdx, eIdx, { value: v ?? 0 })" />
+                    <el-input-number :model-value="eff.level" :min="0" size="small" controls-position="right" class="eff-col-lvl"
+                      @update:model-value="(v: number | undefined) => sysStore.updateComboEffectItem(selectedSystem!.id, cIdx, eIdx, { level: v ?? 0 })" />
                     <button class="delete-btn-sm" @click="sysStore.removeComboEffectItem(selectedSystem!.id, cIdx, eIdx)">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                     </button>
@@ -350,11 +356,11 @@ async function handleDeleteSystem() {
 .res-scroll { flex:1; overflow-y:auto; padding:0 24px 24px; display:flex; flex-wrap:wrap; gap:12px; align-content:flex-start; }
 
 /* Resource Card */
-.res-card { background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-lg); padding:16px; width:380px; flex-shrink:0; box-shadow:var(--shadow-sm); }
+.res-card { background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-lg); padding:16px; width:460px; flex-shrink:0; box-shadow:var(--shadow-sm); }
 .res-card-header { display:flex; align-items:center; gap:8px; margin-bottom:12px; }
 
 /* Combo Card */
-.combo-card { background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-lg); padding:16px; width:420px; flex-shrink:0; box-shadow:var(--shadow-sm); display:flex; flex-direction:column; gap:12px; }
+.combo-card { background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-lg); padding:16px; width:500px; flex-shrink:0; box-shadow:var(--shadow-sm); display:flex; flex-direction:column; gap:12px; }
 .combo-header { display:flex; align-items:center; gap:8px; }
 .combo-icon { font-size:18px; }
 .combo-section { display:flex; flex-direction:column; gap:6px; }
@@ -375,6 +381,7 @@ async function handleDeleteSystem() {
 .eff-col-attr { flex:3; min-width:0; }
 .eff-col-type { flex:2; min-width:0; }
 .eff-col-val { flex:2; min-width:0; }
+.eff-col-lvl { flex:1.2; min-width:0; }
 .eff-col-act { width:28px; flex-shrink:0; }
 .eff-empty { font-size:12px; color:var(--color-text-muted); padding:8px 0; text-align:center; }
 

@@ -12,6 +12,7 @@ export interface Effect {
   targetAttributeId: string  // 目标属性 ID
   type: 'fixed' | 'percent' // 加成类型
   value: number              // 固定值或百分比值
+  level: number              // 效果级别，同级百分比加法合并，不同级乘法叠加
 }
 
 /** 资源定义 */

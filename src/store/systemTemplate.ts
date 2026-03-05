@@ -14,10 +14,19 @@ export const useSystemTemplateStore = defineStore('systemTemplate', () => {
       if (raw) {
         const parsed = JSON.parse(raw)
         if (Array.isArray(parsed)) {
-          // Migrate old templates that lack comboEffects
+          // Migrate old templates that lack comboEffects or effect level
           templates.value = parsed.map((t: any) => ({
             ...t,
-            comboEffects: Array.isArray(t.comboEffects) ? t.comboEffects : []
+            comboEffects: Array.isArray(t.comboEffects)
+              ? t.comboEffects.map((c: any) => ({
+                  ...c,
+                  effects: (c.effects ?? []).map((e: any) => ({ ...e, level: e.level ?? 0 }))
+                }))
+              : [],
+            resources: (t.resources ?? []).map((r: any) => ({
+              ...r,
+              effects: (r.effects ?? []).map((e: any) => ({ ...e, level: e.level ?? 0 }))
+            }))
           }))
         } else {
           templates.value = []
@@ -81,7 +90,7 @@ export const useSystemTemplateStore = defineStore('systemTemplate', () => {
   function addEffect(templateId: string, resourceIndex: number): void {
     const t = templates.value.find(t => t.id === templateId)
     if (t) {
-      t.resources[resourceIndex].effects.push({ id: nanoid(), targetAttributeId: '', type: 'fixed', value: 0 })
+      t.resources[resourceIndex].effects.push({ id: nanoid(), targetAttributeId: '', type: 'fixed', value: 0, level: 0 })
       saveToStorage()
     }
   }
@@ -160,7 +169,7 @@ export const useSystemTemplateStore = defineStore('systemTemplate', () => {
   function addComboEffectItem(templateId: string, comboIndex: number): void {
     const t = templates.value.find(t => t.id === templateId)
     if (t && t.comboEffects?.[comboIndex]) {
-      t.comboEffects[comboIndex].effects.push({ id: nanoid(), targetAttributeId: '', type: 'fixed', value: 0 })
+      t.comboEffects[comboIndex].effects.push({ id: nanoid(), targetAttributeId: '', type: 'fixed', value: 0, level: 0 })
       saveToStorage()
     }
   }

@@ -117,6 +117,7 @@
                   <div v-for="eff in res.effects" :key="eff.id" class="detail-eff-row">
                     <span class="detail-eff-attr">{{ getAttrName(eff.targetAttributeId) }}</span>
                     <span class="detail-eff-type" :class="eff.type">{{ eff.type === 'fixed' ? '固定值' : '百分比' }}</span>
+                    <span class="detail-eff-lvl">Lv.{{ eff.level }}</span>
                     <span class="detail-eff-val" :class="{ negative: eff.value < 0 }">
                       {{ eff.value >= 0 ? '+' : '' }}{{ eff.value }}{{ eff.type === 'percent' ? '%' : '' }}
                     </span>
@@ -149,7 +150,7 @@ import type { LevelAttributeData } from '../types/index'
 
 const store = useRoleConfigStore()
 const libStore = useAttributeLibraryStore()
-const selectedLevel = ref(50)
+const selectedLevel = ref(1)
 const statsTab = ref<'distribution' | 'system' | 'detail'>('distribution')
 const chartRef = ref<HTMLElement | null>(null)
 const chartInstance = shallowRef<echarts.ECharts | null>(null)
@@ -642,6 +643,16 @@ onBeforeUnmount(() => {
   color: #10b981;
   min-width: 50px;
   text-align: right;
+}
+
+.detail-eff-lvl {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 5px;
+  border-radius: 8px;
+  background: #f1f5f9;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
 }
 
 .detail-eff-val.negative {
