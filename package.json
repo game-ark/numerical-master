@@ -1,0 +1,30 @@
+{
+  "name": "role-growth-visualizer",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview",
+    "test": "vitest --run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "echarts": "^5.6.0",
+    "element-plus": "^2.9.7",
+    "nanoid": "^5.1.5",
+    "pinia": "^2.3.1",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.3",
+    "@vue/test-utils": "^2.4.6",
+    "fast-check": "^4.1.1",
+    "jsdom": "^28.1.0",
+    "typescript": "~5.7.2",
+    "vite": "^6.3.5",
+    "vitest": "^3.2.1",
+    "vue-tsc": "^2.2.8"
+  }
+}
