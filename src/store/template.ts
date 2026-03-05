@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { nanoid } from 'nanoid'
-import type { AttributeTemplate, RoleAttribute } from '../types/index'
+import type { AttributeTemplate, RoleAttribute, RoleSystemBinding } from '../types/index'
 
 const STORAGE_KEY = 'role-growth-templates'
 
@@ -14,7 +14,10 @@ export const useTemplateStore = defineStore('template', () => {
       if (raw) {
         const parsed = JSON.parse(raw)
         if (Array.isArray(parsed)) {
-          templates.value = parsed
+          templates.value = parsed.map((t: any) => ({
+            ...t,
+            systemBindings: Array.isArray(t.systemBindings) ? t.systemBindings : []
+          }))
         } else {
           console.warn('role-growth-templates data is not an array, initializing as empty')
           templates.value = []
@@ -34,7 +37,8 @@ export const useTemplateStore = defineStore('template', () => {
     name: string,
     roleName: string,
     growthFactor: number,
-    attributes: RoleAttribute[]
+    attributes: RoleAttribute[],
+    systemBindings: RoleSystemBinding[]
   ): { success: boolean; isDuplicate?: boolean; error?: string } {
     if (!name.trim()) {
       return { success: false, error: '模板名称不能为空' }
@@ -43,18 +47,20 @@ export const useTemplateStore = defineStore('template', () => {
       return { success: false, isDuplicate: true }
     }
     const clonedAttributes: RoleAttribute[] = JSON.parse(JSON.stringify(attributes))
+    const clonedBindings: RoleSystemBinding[] = JSON.parse(JSON.stringify(systemBindings))
     templates.value.push({
       id: nanoid(),
       name,
       roleName,
       growthFactor,
-      attributes: clonedAttributes
+      attributes: clonedAttributes,
+      systemBindings: clonedBindings
     })
     saveToStorage()
     return { success: true }
   }
 
-  function applyTemplate(templateId: string): { roleName: string; growthFactor: number; attributes: RoleAttribute[] } | null {
+  function applyTemplate(templateId: string): { roleName: string; growthFactor: number; attributes: RoleAttribute[]; systemBindings: RoleSystemBinding[] } | null {
     const template = templates.value.find((t) => t.id === templateId)
     if (!template) {
       return null
@@ -62,7 +68,8 @@ export const useTemplateStore = defineStore('template', () => {
     return {
       roleName: template.roleName,
       growthFactor: template.growthFactor,
-      attributes: JSON.parse(JSON.stringify(template.attributes))
+      attributes: JSON.parse(JSON.stringify(template.attributes)),
+      systemBindings: JSON.parse(JSON.stringify(template.systemBindings ?? []))
     }
   }
 

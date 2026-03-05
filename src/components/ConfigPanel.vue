@@ -242,7 +242,7 @@
                 {{ tpl.name }}
                 <span v-if="store.activeTemplateId === tpl.id" class="active-badge">当前</span>
               </span>
-              <span class="template-desc">{{ tpl.attributes.length }} 属性 · 系数 {{ tpl.growthFactor }}</span>
+              <span class="template-desc">{{ tpl.attributes.length }} 属性 · {{ (tpl.systemBindings || []).length }} 系统 · 系数 {{ tpl.growthFactor }}</span>
             </div>
             <div class="template-actions">
               <button class="mini-btn" title="重命名" @click.stop="handleRenameTemplate(tpl.id, tpl.name)">
@@ -341,7 +341,7 @@ async function handleSaveTemplate() {
     if (existing) {
       templateStore.removeTemplate(existing.id)
     }
-    const result = templateStore.saveTemplate(name, store.config.name, store.config.growthFactor, store.config.attributes)
+    const result = templateStore.saveTemplate(name, store.config.name, store.config.growthFactor, store.config.attributes, store.config.systemBindings)
     if (result.success) {
       // Track the new template ID
       const newTpl = templateStore.templates.find(t => t.name === name)
@@ -359,7 +359,7 @@ async function handleSaveTemplate() {
       if (existing) templateStore.removeTemplate(existing.id)
     } catch { return /* cancelled */ }
   }
-  const result = templateStore.saveTemplate(name, store.config.name, store.config.growthFactor, store.config.attributes)
+  const result = templateStore.saveTemplate(name, store.config.name, store.config.growthFactor, store.config.attributes, store.config.systemBindings)
   if (result.success) {
     const newTpl = templateStore.templates.find(t => t.name === name)
     if (newTpl) store.activeTemplateId = newTpl.id
@@ -373,6 +373,7 @@ function handleApplyTemplate(id: string) {
     store.config.name = data.roleName
     store.config.growthFactor = data.growthFactor
     store.config.attributes = data.attributes
+    store.config.systemBindings = data.systemBindings
     store.activeTemplateId = id
     store.forceRecalculate()
     ElMessage.success('模板已应用')

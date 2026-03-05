@@ -68,6 +68,7 @@ export interface AttributeTemplate {
   roleName: string
   growthFactor: number
   attributes: RoleAttribute[]
+  systemBindings: RoleSystemBinding[]
 }
 
 // ============ 计算结果类型 ============
