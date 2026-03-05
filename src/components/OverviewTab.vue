@@ -173,6 +173,7 @@ function getAttrName(attrId: string): string {
 function getChartOption(): echarts.EChartsOption {
   const attrs = overviewData.value.attributes
   return {
+    animation: false,
     tooltip: {
       trigger: 'item',
       formatter: '{b}: {c} ({d}%)',
@@ -216,7 +217,7 @@ function getChartOption(): echarts.EChartsOption {
 }
 
 function updateChart() {
-  if (chartInstance.value) chartInstance.value.setOption(getChartOption(), true)
+  if (chartInstance.value) chartInstance.value.setOption(getChartOption(), { notMerge: true, lazyUpdate: false })
 }
 
 onMounted(() => {
@@ -228,7 +229,8 @@ onMounted(() => {
   }
 })
 
-watch(overviewData, () => updateChart(), { deep: true })
+watch(selectedLevel, () => updateChart())
+watch(() => store.config, () => updateChart(), { deep: true })
 
 onBeforeUnmount(() => {
   resizeObserver?.disconnect()
